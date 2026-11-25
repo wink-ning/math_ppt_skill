@@ -180,4 +180,4 @@ JSON 中按语法转义反斜杠，例如表达式 `\frac{a}{b}` 写入 JSON 字
 
 ## KnowledgeMap正式页面接口
 
-本次增量扩展SlidePlan.objectives、SlidePlan.knowledge_map和Slide.page_role；其他字段不变。图谱page_role=KNOWLEDGE_MAP、section=课堂小结、title=本课知识结构图，不计为第十个栏目；page仍使用教学整数页码。禁止另造page_id、section_type或page_type。完整节点、关系、引用与兼容边界见 [KnowledgeMap契约](knowledge-map.md#正式数据契约)。正文blocks不代替图谱节点绘制。
+本次增量扩展SlidePlan.objectives、SlidePlan.knowledge_map和Slide.page_role；其他字段不变。图谱page_role=KNOWLEDGE_MAP、section=课堂小结、title=本课知识结构图，不计为第十个栏目；page仍使用教学整数页码。禁止另造page_id、section_type或page_type。完整节点、关系、引用与兼容边界见 [KnowledgeMap契约](knowledge-map.md#正式数据契约)。正文blocks不代替图谱节点绘制。教学页重排时更新图谱 page 与受影响节点的 source_pages；增添独立封面等文件页时同时核对教学页和实际文件页的映射。

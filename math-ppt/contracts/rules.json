@@ -13,11 +13,13 @@
         "references/scope-coverage.md",
         "references/teaching.md",
         "references/page-model.md",
-        "references/difficulty-layering.md"
+        "references/difficulty-layering.md",
+        "references/math-checks.md",
+        "references/layout.md"
       ],
       "conditional": [
         {
-          "when": "lesson_type_is_new_or_knowledge_map_requested",
+          "when": "knowledge_map_required_or_present",
           "path": "references/knowledge-map.md"
         }
       ]
@@ -34,7 +36,7 @@
       ],
       "conditional": [
         {
-          "when": "lesson_type_is_new_or_knowledge_map_present",
+          "when": "knowledge_map_required_or_present",
           "path": "references/knowledge-map.md"
         },
         {
@@ -51,27 +53,35 @@
       "required": [
         "references/page-model.md",
         "references/layout.md",
-        "references/delivery-checks.md"
+        "references/delivery-checks.md",
+        "references/difficulty-layering.md"
       ],
       "conditional": [
         {
-          "when": "lesson_type_is_new_or_knowledge_map_present",
+          "when": "knowledge_map_required_or_present",
           "path": "references/knowledge-map.md"
         }
       ]
     }
   },
   "conditions": {
-    "lesson_type_is_new_or_knowledge_map_requested": "新授课，或用户明确要求其他课型提供知识结构图",
-    "lesson_type_is_new_or_knowledge_map_present": "新授课，或方案已有知识结构图",
-    "regression_run": "本轮执行专项回归或人工验证案例",
-    "selected_worked_example": "使用了已选典例",
-    "student_response_task": "页面包含待学生作答或探究的任务",
-    "has_source_images": "制作或验收实际 PPTX，且方案引用了需嵌入的原图",
-    "has_source_guidance_group": "方案使用或声称采用标准分析框，包括待核实来源的情形",
-    "making_pptx": "本轮制作或验收实际 PPTX",
-    "school_logo_required": "制作或验收实际 PPTX，按任务核对要求显示或明确省略的页面",
-    "always": "执行本条规则所在阶段时适用，专项文档中的课型和任务例外按实际情况判定"
+    "always": "当前阶段通用；具体任务例外依专项规范确认",
+    "regression_run": "本轮明确执行专项回归或人工验证",
+    "knowledge_map_required": "已确认是新授课，用户明确要求提供知识结构图，或上游已确认图谱为交付要求",
+    "knowledge_map_required_or_present": "满足 knowledge_map_required，或上游方案已安排图谱，或当前输出已出现图谱数据或图谱页",
+    "selected_worked_example": "已选用原题作为典例，或稿件已使用该典例；对照选题、资料和实际页面",
+    "concept_or_method_has_key_obstacle": "共同目标涉及易混条件、理解障碍或关键方法选择，依据范围与所选任务识别",
+    "task_needs_figure": "根据题干、已选原题或学生操作判断图形是否为必要条件，或用户明确要求相应图形",
+    "task_needs_support_or_feedback": "共同目标的检验、待反馈任务或核心难点需要相应的提示、支架或反馈",
+    "optional_content_selected_or_present": "用户要求或方案已确认选用分层内容，或当前稿件呈现可选任务；基础完整性始终检查",
+    "guidance_selected_or_present": "上游已确认采用本题现成引导，或方案安排、声称采用标准分析框",
+    "making_pptx": "本轮交付实际 PPTX；缺少文件不影响是否适用",
+    "pptx_response_task": "交付实际 PPTX，且预定课件含学生作答或探究任务；明确的静态交付例外按页面规范",
+    "pptx_source_image_needed": "交付实际 PPTX，且由用户要求、已选原题或经确认的方案确定了需要嵌入的原图；检查所需的每张原图",
+    "pptx_knowledge_map": "交付实际 PPTX，且按 knowledge_map_required_or_present 应检查图谱",
+    "pptx_optional_content": "交付实际 PPTX，且按 optional_content_selected_or_present 应检查选讲",
+    "confirmed_visual_check": "交付实际 PPTX，且按本次要求应做显示检查；用户跳过渲染的例外按成品验收",
+    "helpful_contrast": "学生需辨析一个概念或方法的适用边界，可按证据选择比较、反例或等效方式"
   },
   "rules": [
     {
@@ -80,16 +90,36 @@
       "source": "references/scope-coverage.md",
       "stage": "prepare",
       "applies_when": "always",
-      "validation": "source_review",
+      "constraint_type": "required",
+      "validation": [
+        "source_review"
+      ],
       "severity_if_failed": "blocking"
     },
     {
       "id": "MAT-001",
-      "name": "已选典例完整性",
+      "name": "已选典例题面及全部小问",
       "source": "references/material-use.md",
       "stage": "review",
       "applies_when": "selected_worked_example",
-      "validation": "source_review",
+      "constraint_type": "conditional",
+      "validation": [
+        "source_review",
+        "semantic_review"
+      ],
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "MAT-002",
+      "name": "校本核心知识与实际资料来源",
+      "source": "references/material-use.md",
+      "stage": "review",
+      "applies_when": "always",
+      "constraint_type": "required",
+      "validation": [
+        "source_review",
+        "semantic_review"
+      ],
       "severity_if_failed": "blocking"
     },
     {
@@ -98,7 +128,10 @@
       "source": "references/math-checks.md",
       "stage": "review",
       "applies_when": "always",
-      "validation": "semantic_review",
+      "constraint_type": "required",
+      "validation": [
+        "semantic_review"
+      ],
       "severity_if_failed": "blocking"
     },
     {
@@ -107,25 +140,96 @@
       "source": "references/teaching.md",
       "stage": "review",
       "applies_when": "always",
-      "validation": "semantic_review",
+      "constraint_type": "required",
+      "validation": [
+        "semantic_review"
+      ],
       "severity_if_failed": "revision"
     },
     {
       "id": "TEACH-002",
-      "name": "共同目标的独立任务与反馈",
+      "name": "共同目标的独立任务、产出与反馈",
       "source": "references/scope-coverage.md",
       "stage": "review",
       "applies_when": "always",
-      "validation": "semantic_review",
+      "constraint_type": "required",
+      "validation": [
+        "semantic_review"
+      ],
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "TEACH-003",
+      "name": "核心概念及关键方法形成",
+      "source": "references/teaching.md",
+      "stage": "review",
+      "applies_when": "concept_or_method_has_key_obstacle",
+      "constraint_type": "conditional",
+      "validation": [
+        "semantic_review"
+      ],
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "TEACH-004",
+      "name": "必要图形与教学作用",
+      "source": "references/page-model.md",
+      "stage": "review",
+      "applies_when": "task_needs_figure",
+      "constraint_type": "conditional",
+      "validation": [
+        "source_review",
+        "semantic_review"
+      ],
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "TEACH-005",
+      "name": "教学支架与实际反馈",
+      "source": "references/teaching.md",
+      "stage": "review",
+      "applies_when": "task_needs_support_or_feedback",
+      "constraint_type": "conditional",
+      "validation": [
+        "semantic_review"
+      ],
       "severity_if_failed": "revision"
     },
     {
       "id": "LAYER-001",
-      "name": "去除选讲后的基础路径",
+      "name": "跳过选讲后的基础路径",
       "source": "references/difficulty-layering.md",
       "stage": "review",
       "applies_when": "always",
-      "validation": "semantic_review",
+      "constraint_type": "required",
+      "validation": [
+        "semantic_review"
+      ],
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "LAYER-002",
+      "name": "选讲任务的认知增量与前置依赖",
+      "source": "references/difficulty-layering.md",
+      "stage": "review",
+      "applies_when": "optional_content_selected_or_present",
+      "constraint_type": "conditional",
+      "validation": [
+        "semantic_review"
+      ],
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "LAYER-003",
+      "name": "实际选讲路径与继续位置",
+      "source": "references/difficulty-layering.md",
+      "stage": "delivery",
+      "applies_when": "pptx_optional_content",
+      "constraint_type": "conditional",
+      "validation": [
+        "file_structure",
+        "dynamic_playback"
+      ],
       "severity_if_failed": "revision"
     },
     {
@@ -134,16 +238,23 @@
       "source": "references/page-model.md",
       "stage": "plan",
       "applies_when": "always",
-      "validation": "plan_structure",
+      "constraint_type": "required",
+      "validation": [
+        "plan_structure"
+      ],
       "severity_if_failed": "revision"
     },
     {
       "id": "PLAN-002",
-      "name": "分析框来源与分组",
+      "name": "分析框来源、保留及分组",
       "source": "references/page-model.md",
       "stage": "review",
-      "applies_when": "has_source_guidance_group",
-      "validation": "source_review",
+      "applies_when": "guidance_selected_or_present",
+      "constraint_type": "conditional",
+      "validation": [
+        "source_review",
+        "semantic_review"
+      ],
       "severity_if_failed": "revision"
     },
     {
@@ -152,16 +263,60 @@
       "source": "references/page-model.md",
       "stage": "review",
       "applies_when": "selected_worked_example",
-      "validation": "semantic_review",
+      "constraint_type": "conditional",
+      "validation": [
+        "source_review",
+        "semantic_review"
+      ],
       "severity_if_failed": "blocking"
     },
     {
       "id": "MAP-001",
-      "name": "知识结构图及目标映射",
+      "name": "应有知识结构图数据及页面",
       "source": "references/knowledge-map.md",
       "stage": "plan",
-      "applies_when": "lesson_type_is_new_or_knowledge_map_present",
-      "validation": "plan_structure",
+      "applies_when": "knowledge_map_required",
+      "constraint_type": "conditional",
+      "validation": [
+        "plan_structure"
+      ],
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "MAP-002",
+      "name": "知识图谱的依据及数学关系",
+      "source": "references/knowledge-map.md",
+      "stage": "review",
+      "applies_when": "knowledge_map_required_or_present",
+      "constraint_type": "conditional",
+      "validation": [
+        "source_review",
+        "semantic_review"
+      ],
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "MAP-003",
+      "name": "图谱节点与关系实际绘制",
+      "source": "references/delivery-checks.md",
+      "stage": "delivery",
+      "applies_when": "pptx_knowledge_map",
+      "constraint_type": "conditional",
+      "validation": [
+        "file_structure"
+      ],
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "MAP-004",
+      "name": "图谱数据、目标映射与页面引用",
+      "source": "references/knowledge-map.md",
+      "stage": "plan",
+      "applies_when": "knowledge_map_required_or_present",
+      "constraint_type": "conditional",
+      "validation": [
+        "plan_structure"
+      ],
       "severity_if_failed": "blocking"
     },
     {
@@ -169,26 +324,37 @@
       "name": "答案初始隐藏与点击顺序",
       "source": "references/delivery-checks.md",
       "stage": "delivery",
-      "applies_when": "student_response_task",
-      "validation": "file_structure_and_playback",
+      "applies_when": "pptx_response_task",
+      "constraint_type": "conditional",
+      "validation": [
+        "file_structure",
+        "dynamic_playback"
+      ],
       "severity_if_failed": "blocking"
     },
     {
       "id": "PPT-002",
-      "name": "原图嵌入对应页面",
+      "name": "所需原图实际嵌入对应页",
       "source": "references/delivery-checks.md",
       "stage": "delivery",
-      "applies_when": "has_source_images",
-      "validation": "file_structure",
+      "applies_when": "pptx_source_image_needed",
+      "constraint_type": "conditional",
+      "validation": [
+        "file_structure"
+      ],
       "severity_if_failed": "blocking"
     },
     {
       "id": "PPT-003",
-      "name": "学校 Logo",
+      "name": "符合本次 Logo 要求",
       "source": "references/delivery-checks.md",
       "stage": "delivery",
-      "applies_when": "school_logo_required",
-      "validation": "file_structure_and_visual",
+      "applies_when": "making_pptx",
+      "constraint_type": "required",
+      "validation": [
+        "file_structure",
+        "static_render"
+      ],
       "severity_if_failed": "blocking"
     },
     {
@@ -197,7 +363,10 @@
       "source": "references/delivery-checks.md",
       "stage": "delivery",
       "applies_when": "making_pptx",
-      "validation": "file_structure",
+      "constraint_type": "required",
+      "validation": [
+        "file_structure"
+      ],
       "severity_if_failed": "blocking"
     },
     {
@@ -205,13 +374,83 @@
       "name": "页面可读性与版式显示",
       "source": "references/delivery-checks.md",
       "stage": "delivery",
-      "applies_when": "making_pptx",
-      "validation": "visual",
+      "applies_when": "confirmed_visual_check",
+      "constraint_type": "conditional",
+      "validation": [
+        "static_render"
+      ],
       "severity_if_failed": "revision"
+    },
+    {
+      "id": "PPT-006",
+      "name": "成品与已审核方案一致",
+      "source": "references/delivery-checks.md",
+      "stage": "delivery",
+      "applies_when": "making_pptx",
+      "constraint_type": "required",
+      "validation": [
+        "file_structure",
+        "semantic_review"
+      ],
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "STRATEGY-001",
+      "name": "用对比例帮助辨析适用边界",
+      "source": "references/teaching.md",
+      "stage": "design",
+      "applies_when": "helpful_contrast",
+      "constraint_type": "recommended",
+      "validation": [
+        "semantic_review"
+      ],
+      "severity_if_failed": null
     }
   ],
   "conventions": {
-    "validation": "字段说明获取证据的方式，调用方应按实际已注册能力执行和报告",
-    "severity_if_failed": "指适用规则已确认未通过的处理级别，未检查须另按审核与成品验收规范报告"
+    "validation": "数组中的方式各自提供证据，联合检查需分辨实际已执行的方式。无工具时按相应状态报告。",
+    "severity_if_failed": "注册表给出通常路由。专项规范用于区分数学错误、关键条件缺失和教学设计调整；推荐策略的值为 null。",
+    "runtime": "注册表仅提供规范。自动取数、条件求值、日志、阶段阻断和返修需调用方接入。"
+  },
+  "applicability": {
+    "inputs": [
+      "用户原始要求",
+      "已确认课型与范围",
+      "上游确认的目标、任务及选用资料",
+      "当前结果",
+      "交付形式与工具能力"
+    ],
+    "decision": "先用上游要求确定预期对象，再查实际结果。必需对象缺失计未满足；没有检查条件计未检查。仅在有实际不适用依据时标记 NOT_APPLICABLE。",
+    "conditions_are": "适用判据，供角色或调用方读取与判断"
+  },
+  "constraint_types": {
+    "required": "面向当前阶段的必需约束；明确的任务例外按专项判据处理",
+    "conditional": "命中适用条件后必须检查和满足",
+    "recommended": "教学策略建议，允许等效方式，不作为审核通过条件"
+  },
+  "validation_methods": {
+    "plan_structure": "现有 Schema 或确定性方案检查",
+    "source_review": "对照已读取的原始资料、题图、编号或上游确认依据",
+    "semantic_review": "审核数学和教学语义，定位实际页面与学生任务",
+    "file_structure": "打开实际文件并检查内容对象、关系和显示设置",
+    "static_render": "静态渲染并检查实际画面",
+    "dynamic_playback": "用播放器按教学路径查看实际状态与操作"
+  },
+  "review_record": {
+    "statuses": {
+      "PASS": "已执行且有支持通过的实际证据",
+      "FAIL": "已发现具体不符项",
+      "NOT_CHECKED": "未执行或缺少核对所需依据或能力",
+      "NOT_APPLICABLE": "适用条件未成立，须注明原因"
+    },
+    "fields": [
+      "rule_id",
+      "status",
+      "location",
+      "evidence",
+      "required_action"
+    ],
+    "approval": "适用的强制与条件检查均为 PASS，且本阶段没有待处理的阻断或需调整项。NOT_APPLICABLE 必须有理由。",
+    "transport": "工作记录由已有日志承接。正式审核仍返回 approved/issues；无记录接口时无法由程序验证每项检查是否完成。"
   }
 }
