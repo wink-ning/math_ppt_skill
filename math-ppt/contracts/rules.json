@@ -1,0 +1,217 @@
+{
+  "role_references": {
+    "preparer": {
+      "required": [
+        "references/material-use.md",
+        "references/scope-coverage.md"
+      ],
+      "conditional": []
+    },
+    "designer": {
+      "required": [
+        "references/material-use.md",
+        "references/scope-coverage.md",
+        "references/teaching.md",
+        "references/page-model.md",
+        "references/difficulty-layering.md"
+      ],
+      "conditional": [
+        {
+          "when": "lesson_type_is_new_or_knowledge_map_requested",
+          "path": "references/knowledge-map.md"
+        }
+      ]
+    },
+    "reviewer": {
+      "required": [
+        "references/review.md",
+        "references/math-checks.md",
+        "references/scope-coverage.md",
+        "references/page-model.md",
+        "references/difficulty-layering.md",
+        "references/material-use.md",
+        "references/teaching.md"
+      ],
+      "conditional": [
+        {
+          "when": "lesson_type_is_new_or_knowledge_map_present",
+          "path": "references/knowledge-map.md"
+        },
+        {
+          "when": "regression_run",
+          "path": "references/design-cases.md"
+        },
+        {
+          "when": "regression_run",
+          "path": "references/test-matrix.md"
+        }
+      ]
+    },
+    "builder": {
+      "required": [
+        "references/page-model.md",
+        "references/layout.md",
+        "references/delivery-checks.md"
+      ],
+      "conditional": [
+        {
+          "when": "lesson_type_is_new_or_knowledge_map_present",
+          "path": "references/knowledge-map.md"
+        }
+      ]
+    }
+  },
+  "conditions": {
+    "lesson_type_is_new_or_knowledge_map_requested": "新授课，或用户明确要求其他课型提供知识结构图",
+    "lesson_type_is_new_or_knowledge_map_present": "新授课，或方案已有知识结构图",
+    "regression_run": "本轮执行专项回归或人工验证案例",
+    "selected_worked_example": "使用了已选典例",
+    "student_response_task": "页面包含待学生作答或探究的任务",
+    "has_source_images": "制作或验收实际 PPTX，且方案引用了需嵌入的原图",
+    "has_source_guidance_group": "方案使用或声称采用标准分析框，包括待核实来源的情形",
+    "making_pptx": "本轮制作或验收实际 PPTX",
+    "school_logo_required": "制作或验收实际 PPTX，按任务核对要求显示或明确省略的页面",
+    "always": "执行本条规则所在阶段时适用，专项文档中的课型和任务例外按实际情况判定"
+  },
+  "rules": [
+    {
+      "id": "SCOPE-001",
+      "name": "课时范围与关键资料",
+      "source": "references/scope-coverage.md",
+      "stage": "prepare",
+      "applies_when": "always",
+      "validation": "source_review",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "MAT-001",
+      "name": "已选典例完整性",
+      "source": "references/material-use.md",
+      "stage": "review",
+      "applies_when": "selected_worked_example",
+      "validation": "source_review",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "MATH-001",
+      "name": "数学条件、推导与结论",
+      "source": "references/math-checks.md",
+      "stage": "review",
+      "applies_when": "always",
+      "validation": "semantic_review",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "TEACH-001",
+      "name": "课时任务主线",
+      "source": "references/teaching.md",
+      "stage": "review",
+      "applies_when": "always",
+      "validation": "semantic_review",
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "TEACH-002",
+      "name": "共同目标的独立任务与反馈",
+      "source": "references/scope-coverage.md",
+      "stage": "review",
+      "applies_when": "always",
+      "validation": "semantic_review",
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "LAYER-001",
+      "name": "去除选讲后的基础路径",
+      "source": "references/difficulty-layering.md",
+      "stage": "review",
+      "applies_when": "always",
+      "validation": "semantic_review",
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "PLAN-001",
+      "name": "栏目、页数及资料引用",
+      "source": "references/page-model.md",
+      "stage": "plan",
+      "applies_when": "always",
+      "validation": "plan_structure",
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "PLAN-002",
+      "name": "分析框来源与分组",
+      "source": "references/page-model.md",
+      "stage": "review",
+      "applies_when": "has_source_guidance_group",
+      "validation": "source_review",
+      "severity_if_failed": "revision"
+    },
+    {
+      "id": "PLAN-003",
+      "name": "例题出处学生可见",
+      "source": "references/page-model.md",
+      "stage": "review",
+      "applies_when": "selected_worked_example",
+      "validation": "semantic_review",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "MAP-001",
+      "name": "知识结构图及目标映射",
+      "source": "references/knowledge-map.md",
+      "stage": "plan",
+      "applies_when": "lesson_type_is_new_or_knowledge_map_present",
+      "validation": "plan_structure",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "PPT-001",
+      "name": "答案初始隐藏与点击顺序",
+      "source": "references/delivery-checks.md",
+      "stage": "delivery",
+      "applies_when": "student_response_task",
+      "validation": "file_structure_and_playback",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "PPT-002",
+      "name": "原图嵌入对应页面",
+      "source": "references/delivery-checks.md",
+      "stage": "delivery",
+      "applies_when": "has_source_images",
+      "validation": "file_structure",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "PPT-003",
+      "name": "学校 Logo",
+      "source": "references/delivery-checks.md",
+      "stage": "delivery",
+      "applies_when": "school_logo_required",
+      "validation": "file_structure_and_visual",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "PPT-004",
+      "name": "实际 PPTX 文件存在且可打开",
+      "source": "references/delivery-checks.md",
+      "stage": "delivery",
+      "applies_when": "making_pptx",
+      "validation": "file_structure",
+      "severity_if_failed": "blocking"
+    },
+    {
+      "id": "PPT-005",
+      "name": "页面可读性与版式显示",
+      "source": "references/delivery-checks.md",
+      "stage": "delivery",
+      "applies_when": "making_pptx",
+      "validation": "visual",
+      "severity_if_failed": "revision"
+    }
+  ],
+  "conventions": {
+    "validation": "字段说明获取证据的方式，调用方应按实际已注册能力执行和报告",
+    "severity_if_failed": "指适用规则已确认未通过的处理级别，未检查须另按审核与成品验收规范报告"
+  }
+}

@@ -31,15 +31,15 @@
 - prerequisite方向为“前置依据→依赖它的知识”；不是相反方向。
 - source_pages使用当前Slide.page的整数页码，不引入P03等不存在的页面ID。重排后同步更新页码引用。
 
-结构必须有唯一CORE topic根、至少三级、唯一节点/目标编号、有效父节点和关系端点；父子层级及前置依赖不能循环。CORE不能依赖可选父节点或可选前置知识。代码检查有效引用，审核角色另查引用是否真实支持该知识。
+当前契约要求唯一 CORE topic 根、至少三级、唯一节点与目标编号、有效父节点和关系端点；父子层级及前置依赖不能循环。CORE不能依赖可选父节点或可选前置知识。代码检查有效引用，审核角色另查引用是否真实支持该知识。
 
 旧方案仍可解析和读取；使用新版新授工作流重新交付时须补齐目标和图谱。review/custom未提供图谱不强制补齐，已提供则完整校验。不能宣称新增字段对所有旧新授交付完全无影响。
 
 ## 绘制和容量
 
-默认hierarchical；按真实关系可选radial、concept_map、flow、logic_map。括号、树枝、文本框和箭头都可，不强制卡片。优先可编辑PPT文本、原生形状和连接线，其次经核对的矢量方案。不得默认使用图片生成模型生成数学文字整图。
+默认 hierarchical。其他 Schema 可接受的布局须核对本轮绘制器是否能按指定含义输出，再按实际数学关系选用。括号、树枝、文本框和箭头都可，不强制卡片。优先可编辑PPT文本、原生形状和连接线，其次经核对的矢量方案。不得默认使用图片生成模型生成数学文字整图。
 
-沿用16:9、学校Logo、深蓝正文与必要强调色。标题32pt，节点默认28pt，较密时最低24pt；关系说明不得小到无法课堂阅读。不把整个图压成小字截图。连接线不得遮住文字，关系标签不造成歧义；可选节点不能只靠颜色区分。
+沿用 16:9、本次任务的学校 Logo 要求、深蓝正文与必要强调色。标题32pt，节点默认28pt，较密时最低24pt；关系说明不得小到无法课堂阅读。不把整个图压成小字截图。连接线不得遮住文字，关系标签不造成歧义；可选节点不能只靠颜色区分。
 
 默认一页，先合并同类节点、精简重复语句、调整布局，仍超出容量则反馈问题，未经用户同意不拆为多页、不降字号。与普通长题拆页规则不同，此图单页容量限制优先。
 
@@ -55,7 +55,7 @@ tools/knowledge_map.py提供 draw_knowledge_map、check_knowledge_map_slide 以�
 
 内容审核逐项检查：共同目标覆盖、节点对应页面、定义条件及公式、分类和关系方向、未讲知识、核心依赖、可选层级。意见写入现有issues字符串：等级；节点ID/关系；问题类型；对应页；证据；修改动作。纯格式校验不能证明数学正确。
 
-文件结构检查节点、关系、标题、Logo及实际slide_id，检查它们确实是PPT对象、没有遗漏或仅存在备注。视觉检查另查节点文字和公式完整、线条穿字、交叉歧义、边界及可读性。未渲染、未播放必须分别标记未检查，不将节点对象存在称为“已验证渲染”。用户要求不渲染时不启动渲染，但继续执行结构检查。
+文件结构检查节点、关系、标题、本次任务的 Logo 要求及实际 slide_id，检查它们确实是PPT对象、没有遗漏或仅存在备注。视觉检查另查节点文字和公式完整、线条穿字、交叉歧义、边界及可读性。未渲染、未播放必须分别标记未检查，不将节点对象存在称为“已验证渲染”。用户要求不渲染时不启动渲染，但继续执行结构检查。
 
 ## 最小数据示例
 
@@ -65,9 +65,9 @@ tools/knowledge_map.py提供 draw_knowledge_map、check_knowledge_map_slide 以�
   "knowledge_map": {
     "title":"本课知识结构图","page":6,"layout":"hierarchical","root_id":"K0",
     "nodes":[
-      {"id":"K0","label":"实际课题","node_type":"topic","parent_id":null},
-      {"id":"K1","label":"实际概念","node_type":"concept","parent_id":"K0","objective_ids":["O1"],"source_pages":[4]},
-      {"id":"K2","label":"已讲授的完整定义与条件","node_type":"definition","parent_id":"K1","objective_ids":["O1"],"source_pages":[4]}
+      {"id":"K0","label":"实际课题","node_type":"topic","layer":"CORE","parent_id":null},
+      {"id":"K1","label":"实际概念","node_type":"concept","layer":"CORE","parent_id":"K0","objective_ids":["O1"],"source_pages":[4]},
+      {"id":"K2","label":"已讲授的完整定义与条件","node_type":"definition","layer":"CORE","parent_id":"K1","objective_ids":["O1"],"source_pages":[4]}
     ],
     "relationships":[{"from_id":"K1","to_id":"K2","type":"definition","label":"定义"}]
   }
